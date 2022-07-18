@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const sequelize = require("sequelize");
 const connection = require("./database/database");
+const slugify = require("slugify");
 const adminAuth = require("./middlewares/adminAuth");
 
 const categoriesController = require("./categories/CategoriesController");

@@ -1,0 +1,56 @@
+<%- include ("../../partials/header.ejs") %> <%- include ("../../partials/navbar.ejs") %>
+<div class="container">
+  <hr />
+  <div class="card">
+    <div class="card-header">
+      <h2>Novo Pagamento</h2>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="/receipts/save">
+        <label>Data da Competência</label>
+        <input type="date" name="data" class="form-control" required /><br />
+        <input
+          class="form-control"
+          type="text"
+          name="fornecedor"
+          placeholder="Fornecedor"
+          required
+        /><br />
+        <div class="input--with-addon currency-input">
+          <label>Valor</label>
+          <span class="input-addon input-addon--align-left" shouldshow="R$"
+            ><span class="input-addon-text"> R$ </span
+            ><!----></span
+          >
+          <div class="input__container numeral-input">
+            <input
+              required="required"
+              type="text"
+              name="valor"
+              class="input form-control form-control-danger"
+            /><!---->
+          </div>
+          <!----><!---->
+        </div>
+        <br />
+        <label>Categoria</label>
+        <select name="category" class="form-control">
+          <% categories.forEach((category) => { %>
+          <option value="<%= category.id %>"><%= category.title %></option>
+          <% }) %>
+        </select>
+        <br />
+        <label>Observações</label>
+        <textarea
+          class="form-control"
+          name="obs"
+          required
+        ></textarea
+        ><br />
+        <button class="btn btn-success">Salvar</button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include ("../../partials/footer.ejs") %>
+

@@ -1,0 +1,37 @@
+<%- include ("partials/header.ejs") %> <%- include ("partials/navbar.ejs") %>
+<body>
+  <div class="container">
+    <hr />
+    <div class="jumbotron text-center">
+      <h1 class="display-4">Controle de despesas</h1>
+      <hr class="my-4" />
+      <h4>Saldo atual</h4>
+      <h1 id="balance" class="balance">R$ <%= soma %></h1>
+      <br />
+      <div class="row">
+        <div class="col">
+          <h4>Receitas</h4>
+          <p id="money-plus" class="money plus">+ R$ <%= totalReceipts %> </p>
+          <a class="btn btn-success" type="submit" href="/admin/receipts">
+            Novo Recebimento
+          </a>
+        </div>
+
+        <div class="col">
+          <h4>Despesas</h4>
+
+          <p id="money-minus" class="money minus">- R$ <%= totalPayments %></p>
+
+          <a class="btn btn-danger" type="submit" href="/admin/payments">
+            Novo Pagamento
+          </a>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <hr />
+  </div>
+</body>
+
+<%- include ("partials/footer.ejs") %>

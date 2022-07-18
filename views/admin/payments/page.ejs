@@ -1,0 +1,37 @@
+<%- include ("../../partials/header.ejs") %> <%- include ("../../partials/navbar.ejs")
+%>
+<body>
+  <div class="container">
+    <hr />
+    <% result.payments.rows.forEach(payment => { %>
+    <div class="card">
+      <div class="card-header">
+        <h2><%= payment.fornecedor %></h2>
+      </div>
+      <div class="card-body">
+        <a href="/<%= payment.slug %>" class="btn btn-success">Pagamento</a>
+      </div>
+    </div>
+    <br />
+    <% }) %>
+
+    <div class="row">
+      <div class="col col-12">
+        <% if(result.page > 2) {%>
+        <a style="float:left" href="/payments/page/<%= result.page - 1 %>">
+          <<< Prev</a
+        >
+        <% } else if(result.page == 2) { %>
+        <a style="float:left" href="/"> <<< Prev</a>
+        <% } %> <% if(result.next) {%>
+        <a style="float:right" href="/payments/page/<%= result.page + 1 %>"
+          >Next >>></a
+        >
+        <% } %>
+      </div>
+      <hr />
+    </div>
+    <hr />
+  </div>
+</body>
+<%- include ("../../partials/footer.ejs") %>
