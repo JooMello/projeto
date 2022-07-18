@@ -1,0 +1,34 @@
+{
+  "name": "fluxo_de_caixa",
+  "version": "1.0.0",
+  "description": "projeto fluxo de caixa basico ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "author": "pão queimado",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19",
+    "sequelize": "^6.21.2",
+    "slugify": "^1.6.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JooMello/projeto.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JooMello/projeto/issues"
+  },
+  "homepage": "https://github.com/JooMello/projeto#readme"
+}
