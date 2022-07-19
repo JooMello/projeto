@@ -1,54 +1,71 @@
-<%- include ("../../partials/header.ejs") %> <%- include ("../../partials/navbar.ejs") %>
+<%- include ("../../partials/header.ejs") %> <%- include
+("../../partials/navbar.ejs") %>
 
-<div class="container">
-    <hr>
-    <div class="card"> 
-        <div class="card-header">
-            <h2>Editar Pagamento</h2>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="/receipts/update">
-                <input type="hidden" value="<%= receipt.id %>" name="id">
-                <input class="form-control" type="text" name="fornecedor" placeholder="Defina o título do Pagamento" value="<%= receipt.fornecedor %>"><br>
-                <textarea class="form-control" placeholder="Escreva o Pagamento aqui!" name="obs" id="receipt"></textarea><br>
-                <label>Categoria</label>
-                <select name="category" class="form-control">
-                    <% categories.forEach((category) => { %>
-                        <% if(category.id == receipt.categoryId) { %> 
-                            <option value="<%= category.id %>" selected><%= category.title %></option>
-                        <% } else { %>
-                            <option value="<%= category.id %>"><%= category.title %></option>
-                        <% } %>   
-                    <% }) %>
-                </select>
-                <br>
-                <button class="btn btn-success">Atualizar</button>
-            </form>
-        </div>
+  <div class="container">
+    <hr />
+    <div class="card">
+      <div class="card-header">
+        <h2>Atualizar Recebimento</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="/receipts/update">
+          <label>Data da Competência</label>
+           <input type="hidden" value="<%= receipt.id %>" name="id" />
+          <input
+            type="data"
+            name="data"
+            class="form-control"
+            value="<%= receipt.data %>"
+            required
+          /><br />
+          <label>Fornecedor</label>
+          <input
+            class="form-control"
+            type="texto"
+            name="fornecedor"
+            placeholder="Fornecedor"
+            value="<%= receipt.fornecedor %>"
+            required
+          /><br />
+          <div class="input--with-addon currency-input">
+            <label>Valor</label>
+            <span class="input-addon input-addon--align-left" shouldshow="R$"
+              ><span class="input-addon-text"> R$ </span
+              ><!----></span
+            >
+            <div class="input__container numeral-input">
+              <input
+                required="required"
+                type="text"
+                name="valor"
+                value="<%= receipt.valor %>"
+                class="input form-control form-control-danger"
+              /><!---->
+            </div>
+            <!----><!---->
+          </div>
+          <br />
+          <label>Observações</label>
+          <textarea
+            class="form-control"
+            name="obs"
+            value="<%= receipt.obs %>"
+            required
+          ></textarea>
+
+          <label>Categoria</label>
+          <select name="category" class="form-control">
+         <% categories.forEach((category) => { %>
+   <option value="<%= category.id %>" <%= category.id === receipt.id ? "selected" : '' %>>
+    <%= category.title %></option>
+ <% }) %>
+        </select>
+          <br />
+          <button class="btn btn-success">Atualizar</button>
+        </form>
+      </div>
     </div>
-</div>
-
-<div id="content" style="display: none;">
-    <%- receipt.obs %>
-</div>
-
+  </div> 
 
 
 <%- include ("../../partials/footer.ejs") %>
-
-<script src="/tinymce/tinymce.min.js"></script>
-<script>
-
-    tinymce.init({
-        language: 'pt_BR',
-        selector: "#receipt",
-        activeEditor: true,
-        plugins: [
-            'advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
-        ],
-        init_instance_callback: () => {
-            tinymce.get("receipt").setContent($("#content").html())
-        }
-    })
-
-</script>

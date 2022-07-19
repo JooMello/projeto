@@ -30,6 +30,8 @@ app.use(
   })
 );
 
+
+
 // Static
 app.use(express.static("public"));
 
@@ -54,7 +56,9 @@ connection
 app.use("/", categoriesController);
 app.use("/", usersController);
 app.use("/", paymentsController);
-app.use("/", receiptsController);
+app.use("/", receiptsController)
+ 
+
 
 app.get("/", adminAuth, async (req, res) => {
 

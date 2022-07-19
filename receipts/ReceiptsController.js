@@ -7,17 +7,29 @@ const adminAuth = require("../middlewares/adminAuth");
 
 router.get("/admin/receipts", adminAuth, (req, res) => {
   Receipt.findAll({
-    include: [{ model: Category }],
-    order: [["id", "DESC"]],
-    limit: 4,
+    include: [{
+      model: Category
+    }],
+    order: [
+      ["id", "DESC"]
+    ],
+    limit: 2,
   }).then((receipts) => {
-    res.render("admin/receipts/index", { receipts: receipts });
+    Category.findAll().then((categories) => {
+      console.log(JSON.stringify(receipts, null, 2))
+      res.render("admin/receipts/index", {
+        receipts: receipts,
+        categories: categories,
+      });
+    });
   });
 });
 
 router.get("/admin/receipts/new", adminAuth, (req, res) => {
   Category.findAll().then((categories) => {
-    res.render("admin/receipts/new", { categories: categories });
+    res.render("admin/receipts/new", {
+      categories: categories
+    });
   });
 });
 
@@ -89,21 +101,18 @@ router.post("/receipts/update", adminAuth, (req, res) => {
   var obs = req.body.obs;
   var category = req.body.category;
 
-  Receipt.update(
-    {
+  Receipt.update({
       data: data,
       fornecedor: fornecedor,
       valor: valor,
       obs: obs,
       categoryId: category,
       slug: slugify(fornecedor),
-    },
-    {
+    }, {
       where: {
         id: id,
       },
-    }
-  )
+    })
     .then(() => {
       res.redirect("/admin/receipts");
     })
@@ -119,15 +128,21 @@ router.get("/receipts/page/:num", (req, res) => {
   if (isNaN(page) || page == 1) {
     offset = 0;
   } else {
-    offset = (parseInt(page) - 1) * 4;
+    offset = (parseInt(page) - 1) * 2;
   }
 
-  Receipt.findAndCountAll({
-    limit: 4,
+  Receipt.findAll({
+    include: [{
+      model: Category
+    }],
+    order: [
+      ["id", "DESC"]
+    ],
+    limit: 2,
     offset: offset,
   }).then((receipts) => {
     var next;
-    if (offset + 4 >= receipts.count) {
+    if (offset + 2 >= receipts.count) {
       next = false;
     } else {
       next = true;
@@ -142,6 +157,50 @@ router.get("/receipts/page/:num", (req, res) => {
     Category.findAll().then((categories) => {
       res.render("admin/receipts/page", {
         result: result,
+        receipts: receipts,
+        categories: categories,
+      });
+    });
+  });
+});
+
+router.get("/receipts/page/:categoryId", (req, res) => {
+  var page = req.params.categoryId;
+  var offset = 0;
+
+  if (isNaN(page) || page == 1) {
+    offset = 0;
+  } else {
+    offset = (parseInt(page) - 1) * 2;
+  }
+
+  Receipt.findAll({
+    include: [{
+      model: Category
+    }],
+    order: [
+      ["id", "DESC"]
+    ],
+    limit: 2,
+    offset: offset,
+  }).then((receipts) => {
+    var next;
+    if (offset + 2 >= receipts.count) {
+      next = false;
+    } else {
+      next = true;
+    }
+
+    var result = {
+      page: parseInt(page),
+      next: next,
+      receipts: receipts,
+    };
+
+    Category.findAll().then((categories) => {
+      res.render("admin/receipts/page", {
+        result: result,
+        receipts: receipts,
         categories: categories,
       });
     });

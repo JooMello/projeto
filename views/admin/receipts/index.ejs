@@ -23,6 +23,11 @@
         <td><%= receipt.valor %></td>
         <td><%= receipt.category.title %></td>
         <td>
+           <a
+            href="/admin/receipts/edit/<%= receipt.id %>"
+            class="btn btn-warning"
+            >Editar</a
+          >
           <form
             method="POST"
             action="/receipts/delete"

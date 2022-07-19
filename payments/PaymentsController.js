@@ -9,25 +9,25 @@ const sequelize = require("sequelize");
 
 //lista todos os pagamentos
 router.get("/admin/payments", adminAuth, async (req, res) => {
-Payment.findAll({
-      include: [{
+  Payment.findAll({
+    include: [
+      {
         model: Category,
-      }, ],
-      order: [
-        ["id", "DESC"]
-      ],
-      limit: 20,
-    })
-      .then((payments) => {
-        Category.findAll().then((categories) => {
-          res.render("admin/payments/index", {
-            payments: payments,
-            categories: categories,
-          });
-        });
+      },
+    ],
+    order: [["id", "DESC"]],
+    limit: 2,
+  }).then((payments) => {
+    Category.findAll().then((categories) => {
+      res.render("admin/payments/index", {
+        payments: payments,
+        categories: categories,
       });
+    });
+  });
 });
 
+/* TESTE
 // lista pagamentos em uma categoria especifica.
 router.get("/admin/payments/category/:id", adminAuth, (req, res, next) => {
   paymentsListing = [];
@@ -42,6 +42,7 @@ router.get("/admin/payments/category/:id", adminAuth, (req, res, next) => {
       }
     })
 });
+*/
 
 router.get("/admin/payments/new", adminAuth, (req, res) => {
   Category.findAll().then((categories) => {
@@ -50,8 +51,6 @@ router.get("/admin/payments/new", adminAuth, (req, res) => {
     });
   });
 });
-
-
 
 router.post("/payments/save", adminAuth, (req, res) => {
   var data = req.body.data;
@@ -97,7 +96,7 @@ router.get("/admin/payments/edit/:id", adminAuth, (req, res) => {
   var id = req.params.id;
   Payment.findByPk(id)
     .then((payment) => {
-      if (payment != undefined) {
+      if (payment) {
         Category.findAll().then((categories) => {
           res.render("admin/payments/edit", {
             categories: categories,
@@ -114,30 +113,34 @@ router.get("/admin/payments/edit/:id", adminAuth, (req, res) => {
 });
 
 router.post("/payments/update", adminAuth, (req, res) => {
-  var data = req.body.data;
   var id = req.body.id;
+  var data = req.body.data;
   var fornecedor = req.body.fornecedor;
   var valor = req.body.valor;
   var obs = req.body.obs;
   var category = req.body.category;
-
-  Payment.update({
+  
+  Payment.update(
+    {
       data: data,
-      fornecedor: fornecedor,
-      valor: valor,
+      fornecedor,
+      valor,
       obs: obs,
       categoryId: category,
       slug: slugify(fornecedor),
-    }, {
+    },
+    {
       where: {
         id: id,
       },
-    })
+    }
+  )
+    
     .then(() => {
       res.redirect("/admin/payments");
     })
     .catch((err) => {
-      res.redirect("/");
+      res.send("erro:" + err);
     });
 });
 
@@ -148,15 +151,21 @@ router.get("/payments/page/:num", (req, res) => {
   if (isNaN(page) || page == 1) {
     offset = 0;
   } else {
-    offset = (parseInt(page) - 1) * 4;
+    offset = (parseInt(page) - 1) * 2;
   }
 
-  Payment.findAndCountAll({
-    limit: 4,
+  Payment.findAll({
+    include: [
+      {
+        model: Category,
+      },
+    ],
+    order: [["id", "DESC"]],
+    limit: 2,
     offset: offset,
   }).then((payments) => {
     var next;
-    if (offset + 4 >= payments.count) {
+    if (offset + 2 >= payments.count) {
       next = false;
     } else {
       next = true;
@@ -171,6 +180,7 @@ router.get("/payments/page/:num", (req, res) => {
     Category.findAll().then((categories) => {
       res.render("admin/payments/page", {
         result: result,
+        payments: payments,
         categories: categories,
       });
     });

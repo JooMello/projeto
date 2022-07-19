@@ -11,7 +11,7 @@
     </div>
    <div class="card">
         <select name="category" class="form-control">
-          <% categories.forEach((category) => { %>
+          <% categories.forEach((category) => { %> 
           <option value="<%= category.id %>"><%= category.title %></option>
           <% }) %>
         </select>
@@ -41,6 +41,11 @@
         <td><%= payment.valor %></td>
         <td><%= payment.category.title %></td>
         <td>
+           <a
+            href="/admin/payments/edit/<%= payment.id %>"
+            class="btn btn-warning"
+            >Editar</a
+          >
           <form
             method="POST"
             action="/payments/delete"

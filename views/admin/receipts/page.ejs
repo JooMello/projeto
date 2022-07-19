@@ -1,19 +1,47 @@
-<%- include ("../../partials/header.ejs") %> <%- include ("../../partials/navbar.ejs")
-%>
+<%- include ("../../partials/header.ejs") %> <%- include
+("../../partials/navbar.ejs") %>
+
 <body>
   <div class="container">
     <hr />
-    <% result.receipts.rows.forEach(receipt => { %>
-    <div class="card">
-      <div class="card-header">
-        <h2><%= receipt.fornecedor %></h2>
-      </div>
-      <div class="card-body">
-        <a href="/<%= receipt.slug %>" class="btn btn-success">Recebimento</a>
-      </div>
-    </div>
-    <br />
-    <% }) %>
+    <h2>Recebimentos</h2>
+    <a class="btn btn-success" href="/admin/receipts/new">Novo Recebimento</a>
+    <hr />
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Fornecedor</th>
+          <th>Valor</th>
+          <th>Categoria</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% receipts.forEach(receipt => { %>
+        <tr href="/<%= receipt.slug %>">
+          <td><%= receipt.fornecedor %></td>
+          <td><%= receipt.valor %></td>
+          <td><%= receipt.category.title %></td>
+          <td>
+            <a
+              href="/admin/receipts/edit/<%= receipt.id %>"
+              class="btn btn-warning"
+              >Editar</a
+            >
+            <form
+              method="POST"
+              action="/receipts/delete"
+              style="display: inline;"
+              onsubmit="confirmarDelecao(event, this)"
+            >
+              <input type="hidden" name="id" value="<%= receipt.id %>" />
+              <button class="btn btn-danger">Deletar</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
 
     <div class="row">
       <div class="col col-12">
@@ -33,5 +61,18 @@
     </div>
     <hr />
   </div>
+
+  <body>
+    <%- include ("../../partials/footer.ejs") %>
+
+    <script>
+      function confirmarDelecao(event, form) {
+        event.preventDefault();
+        var decision = confirm("Você quer deletar este Recebimento?");
+        if (decision) {
+          form.submit();
+        }
+      }
+    </script>
+  </body>
 </body>
-<%- include ("../../partials/footer.ejs") %>
