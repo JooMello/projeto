@@ -28,7 +28,7 @@ router.get("/admin/payments", adminAuth, async (req, res, next) => {
   }).then((payments) => {
 
     Category.findAll().then((categories) => {
-      res.render("admin/payments/index", { 
+      res.render("admin/payments/index", {
         payments: payments,
         categories: categories,
 
