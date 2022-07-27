@@ -11,8 +11,8 @@
     </div>
    <div class="card">
         <select name="category" class="form-control">
-          <% categories.forEach((category) => { %>
-          <option value="<%= category.id %>"><%= category.title %></option>
+           <% payments.forEach(payment => { %>
+          <option value=" <%= payment.slug %>"><%= payment.category.title %></option>
           <% }) %>
         </select>
   </div>

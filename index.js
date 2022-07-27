@@ -7,6 +7,7 @@ const connection = require("./database/database");
 const slugify = require("slugify");
 const adminAuth = require("./middlewares/adminAuth");
 
+
 const categoriesController = require("./categories/CategoriesController");
 const usersController = require("./users/UsersController");
 const paymentsController = require("./payments/PaymentsController");
@@ -57,7 +58,7 @@ app.use("/", categoriesController);
 app.use("/", usersController);
 app.use("/", paymentsController);
 app.use("/", receiptsController)
- 
+
 
 
 app.get("/", adminAuth, async (req, res) => {
@@ -222,7 +223,7 @@ app.get("/category/:slug", (req, res) => {
 });
 
 
- 
+
 app.listen(8080, () => {
   console.log("O servidor está rodando!");
 });

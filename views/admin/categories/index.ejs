@@ -38,6 +38,11 @@
       <% }) %>
     </tbody>
   </table>
+
+  <div>
+      <canvas id="myChart"></canvas>
+    </div>
+    
 </div>
 <%- include ("../../partials/footer.ejs") %>
 <script>
@@ -48,4 +53,85 @@
       form.submit();
     }
   }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const labels = [
+    "Saldo Inicial",
+    "Receita Operacionais",
+    "Receitas bruta de vendas",
+    "Dedução de receita bruta",
+    "Receita líquida de vendas",
+    "Custos operacionais",
+    "Lucro bruto",
+    "Despesas operacionais",
+    "Lucro / prejuízo operacionais",
+    "Receitas e despesas financeiras",
+    "Outras receitas e despesas não operacionais",
+    "Lucro / prejuízo liquido",
+    "Despesas com investimentos e empréstimos",
+    "Lucro / Prejuízo final",
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "My First dataset",
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 9, 12, 0.2)",
+          "rgba(54, 12, 23, 0.2)",
+          "rgba(25, 06, 186, 0.2)",
+          "rgba(75, 92, 192, 0.2)",
+          "rgba(53, 12, 255, 0.2)",
+          "rgba(55, 15, 84, 0.2)",
+          "rgba(15, 02, 255, 0.2)",
+          "rgba(25, 19, 64, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 0.1)",
+          "rgba(54, 162, 235, 0.1)",
+          "rgba(255, 206, 86, 0.1)",
+          "rgba(75, 192, 192, 0.1)",
+          "rgba(153, 102, 255, 0.1)",
+          "rgba(255, 159, 64, 0.1)",
+          "rgba(255, 9, 12, 0.1)",
+          "rgba(54, 12, 23, 0.1)",
+          "rgba(25, 06, 186, 0.1)",
+          "rgba(75, 92, 192, 0.1)",
+          "rgba(53, 12, 255, 0.1)",
+          "rgba(55, 15, 84, 0.1)",
+          "rgba(15, 02, 255, 0.1)",
+          "rgba(25, 19, 64, 0.1)",
+        ],
+        borderWidth: 1,
+        data: [0, 10, 5, 2, 20, 30, 45, 2, 10, 5, 2, 12, 3, 25, 5, 12],
+      },
+    ],
+  };
+
+  const config = {
+    type: "doughnut",
+    data: data,
+    options: {
+      plugins: {
+            title: {
+                display: true,
+                text: 'Categorias'
+            }
+        }
+    },
+  };
+</script>
+
+<script>
+  const myChart = new Chart(document.getElementById("myChart"), config);
 </script>

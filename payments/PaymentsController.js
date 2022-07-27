@@ -6,33 +6,45 @@ const slugify = require("slugify");
 const adminAuth = require("../middlewares/adminAuth");
 const connection = require("../database/database");
 const sequelize = require("sequelize");
+const {
+  Op
+} = require("sequelize");
+var mysql = require('mysql');
+
 
 //lista todos os pagamentos
-router.get("/admin/payments", adminAuth, async (req, res) => {
+
+router.get("/admin/payments", adminAuth, async (req, res, next) => {
+
   Payment.findAll({
-    include: [
-      {
-        model: Category,
-      },
+    include: [{
+      model: Category,
+    }, ],
+    order: [
+      ["id", "DESC"]
     ],
-    order: [["id", "DESC"]],
-    limit: 2,
+    limit: 20,
+
   }).then((payments) => {
+
     Category.findAll().then((categories) => {
-      res.render("admin/payments/index", {
+      res.render("admin/payments/index", { 
         payments: payments,
         categories: categories,
+
       });
     });
-  });
+  })
+
 });
 
-/* TESTE
+
+/*
 // lista pagamentos em uma categoria especifica.
 router.get("/admin/payments/category/:id", adminAuth, (req, res, next) => {
   paymentsListing = [];
   var selectStmt = 'SELECT * FROM guiapress.payments WHERE category=?;';
-  ybCassandra.execute(selectStmt, [req.params.category])
+ execute(selectStmt, [req.params.category])
     .then(result => {
       const row = result.first();
       for (var i = 0; i < result.rows.length; i++) {
@@ -43,6 +55,7 @@ router.get("/admin/payments/category/:id", adminAuth, (req, res, next) => {
     })
 });
 */
+
 
 router.get("/admin/payments/new", adminAuth, (req, res) => {
   Category.findAll().then((categories) => {
@@ -119,23 +132,20 @@ router.post("/payments/update", adminAuth, (req, res) => {
   var valor = req.body.valor;
   var obs = req.body.obs;
   var category = req.body.category;
-  
-  Payment.update(
-    {
+
+  Payment.update({
       data: data,
       fornecedor,
       valor,
       obs: obs,
       categoryId: category,
       slug: slugify(fornecedor),
-    },
-    {
+    }, {
       where: {
         id: id,
       },
-    }
-  )
-    
+    })
+
     .then(() => {
       res.redirect("/admin/payments");
     })
@@ -151,17 +161,17 @@ router.get("/payments/page/:num", (req, res) => {
   if (isNaN(page) || page == 1) {
     offset = 0;
   } else {
-    offset = (parseInt(page) - 1) * 2;
+    offset = (parseInt(page) - 1) * 20;
   }
 
   Payment.findAll({
-    include: [
-      {
-        model: Category,
-      },
+    include: [{
+      model: Category,
+    }, ],
+    order: [
+      ["id", "DESC"]
     ],
-    order: [["id", "DESC"]],
-    limit: 2,
+    limit: 20,
     offset: offset,
   }).then((payments) => {
     var next;
@@ -184,7 +194,34 @@ router.get("/payments/page/:num", (req, res) => {
         categories: categories,
       });
     });
-  });
+  })
 });
+
+
+router.post("/payments/filter:num", adminAuth, (req, res) => {
+
+  var category = req.body.category;
+
+  Post.findAll({
+      where: {
+        categoryId: category,
+      },
+      include: [{
+        model: Category,
+      }, ],
+      order: [
+        ["id", "DESC"]
+      ],
+      limit: 20,
+    })
+    .then((payments) => {
+      Category.findAll().then((categories) => {
+        res.render("admin/payments/filter", {
+          payments: payments,
+          categories: categories,
+        });
+      })
+    })
+})
 
 module.exports = router;

@@ -10,5 +10,6 @@ const connection = new Sequelize("guiapress", "root", "T5u9w3p6#", {
 });
 
 
+
 module.exports = connection;
     

@@ -23,7 +23,13 @@ const Payment = connection.define("payments", {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  categoryId: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  }
 });
+
+
 
 
 Category.hasMany(Payment); // UMA Categoria tem muitos artigos
