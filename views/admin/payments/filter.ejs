@@ -9,13 +9,26 @@
       <div class="card">
         <a class="btn btn-success" href="/admin/payments/new">Novo Pagamento</a>
       </div>
-      <div class="card">
-        <select name="category" class="form-control">
-          <% categories.forEach((category) => { %>
-          <option value="<%= category.id %>"><%= category.title %></option>
-          <% }) %>
-        </select>
-      </div>
+        <div class="card">
+       <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+    </div>
       <div class="card">
         <!--Barra de Pesquisa-->
         <form class="form-search">

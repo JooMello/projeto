@@ -6,6 +6,7 @@ const sequelize = require("sequelize");
 const connection = require("./database/database");
 const slugify = require("slugify");
 const adminAuth = require("./middlewares/adminAuth");
+const moment = require("moment");
 
 
 const categoriesController = require("./categories/CategoriesController");

@@ -16,7 +16,6 @@ router.get("/admin/receipts", adminAuth, (req, res) => {
     limit: 2,
   }).then((receipts) => {
     Category.findAll().then((categories) => {
-      console.log(JSON.stringify(receipts, null, 2))
       res.render("admin/receipts/index", {
         receipts: receipts,
         categories: categories,

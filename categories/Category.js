@@ -9,8 +9,7 @@ const Category = connection.define('categories',{
         type: Sequelize.STRING,
         allowNull: false
     }
-})
-
+}) 
 //Category.sync({ force: true });
 
 module.exports = Category;

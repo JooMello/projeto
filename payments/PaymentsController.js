@@ -9,12 +9,186 @@ const sequelize = require("sequelize");
 const {
   Op
 } = require("sequelize");
-var mysql = require('mysql');
-
+const moment = require("moment");
 
 //lista todos os pagamentos
 
+
+
 router.get("/admin/payments", adminAuth, async (req, res, next) => {
+
+  var totalPayments1 = 0;
+  var totalPayments2 = 0;
+  var totalPayments3 = 0;
+  var totalPayments4 = 0;
+  var totalPayments5 = 0;
+  var totalPayments6 = 0;
+  var totalPayments7 = 0;
+  var totalPayments8 = 0;
+  var totalPayments9 = 0;
+  var totalPayments10 = 0;
+  var totalPayments11 = 0;
+  var totalPayments12 = 0;
+  var totalPayments13 = 0;
+  var totalPayments14 = 0;
+
+  var amount1 = await Payment.findOne({
+    where: {
+      categoryId: 1,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments1 = amount1['sum(`valor`)']
+
+  var amount2 = await Payment.findOne({
+    where: {
+      categoryId: 2,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+
+  var totalPayments3 = amount2['sum(`valor`)']
+  var amount3 = await Payment.findOne({
+    where: {
+      categoryId: 3,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments3 = amount3['sum(`valor`)']
+
+  var amount4 = await Payment.findOne({
+    where: {
+      categoryId: 4,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments2 = amount4['sum(`valor`)']
+
+
+  var amount5 = await Payment.findOne({
+    where: {
+      categoryId: 5,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments5 = amount5['sum(`valor`)']
+
+  var amount6 = await Payment.findOne({
+    where: {
+      categoryId: 6,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments6 = amount6['sum(`valor`)']
+
+
+
+  var amount7 = await Payment.findOne({
+    where: {
+      categoryId: 7,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments7 = amount7['sum(`valor`)']
+
+
+  var amount8 = await Payment.findOne({
+    where: {
+      categoryId: 8,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments8 = amount8['sum(`valor`)']
+
+
+
+  var amount9 = await Payment.findOne({
+    where: {
+      categoryId: 9,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments9 = amount9['sum(`valor`)']
+
+  var amount10 = await Payment.findOne({
+    where: {
+      categoryId: 10,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments10 = amount10['sum(`valor`)']
+
+
+  var amount11 = await Payment.findOne({
+    where: {
+      categoryId: 11,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments11 = amount11['sum(`valor`)']
+
+
+  var amount12 = await Payment.findOne({
+    where: {
+      categoryId: 12,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments12 = amount12['sum(`valor`)']
+
+
+
+  var amount13 = await Payment.findOne({
+    where: {
+      categoryId: 13,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments13 = amount13['sum(`valor`)']
+
+
+  var amount14 = await Payment.findOne({
+    where: {
+      categoryId: 14,
+    },
+    attributes: [sequelize.fn("sum", sequelize.col("valor"))],
+    raw: true
+  });
+  var totalPayments14 = amount14['sum(`valor`)']
+
+
+  let filtroMes = await Payment.findAll({
+
+    include: [{
+      model: Category,
+    }, ],
+    order: [
+      ["id", "DESC"]
+    ],
+    limit: 20,
+    where: {
+      data: {
+        [Op.between]: [new Date("Jul 01 2022"), new Date("Jul 30 2022")],
+      },
+    },
+  });
+  
+
+
+
 
   Payment.findAll({
     include: [{
@@ -26,35 +200,29 @@ router.get("/admin/payments", adminAuth, async (req, res, next) => {
     limit: 20,
 
   }).then((payments) => {
-
     Category.findAll().then((categories) => {
       res.render("admin/payments/index", {
         payments: payments,
         categories: categories,
-
+        filtroMes: filtroMes,
+        totalPayments1: totalPayments1,
+        totalPayments2: totalPayments2,
+        totalPayments3: totalPayments3,
+        totalPayments4: totalPayments4,
+        totalPayments5: totalPayments5,
+        totalPayments6: totalPayments6,
+        totalPayments7: totalPayments7,
+        totalPayments8: totalPayments8,
+        totalPayments9: totalPayments9,
+        totalPayments10: totalPayments10,
+        totalPayments11: totalPayments11,
+        totalPayments12: totalPayments12,
+        totalPayments13: totalPayments13,
+        totalPayments14: totalPayments14,
       });
     });
   })
-
 });
-
-
-/*
-// lista pagamentos em uma categoria especifica.
-router.get("/admin/payments/category/:id", adminAuth, (req, res, next) => {
-  paymentsListing = [];
-  var selectStmt = 'SELECT * FROM guiapress.payments WHERE category=?;';
- execute(selectStmt, [req.params.category])
-    .then(result => {
-      const row = result.first();
-      for (var i = 0; i < result.rows.length; i++) {
-        var avgStars = result.rows[i].total_stars / result.rows[i].num_reviews;
-        result.rows[i].stars = avgStars.toFixed(2);
-        paymentsListing.push(result.rows)
-      }
-    })
-});
-*/
 
 
 router.get("/admin/payments/new", adminAuth, (req, res) => {
@@ -200,19 +368,19 @@ router.get("/payments/page/:num", (req, res) => {
 
 router.post("/payments/filter:num", adminAuth, (req, res) => {
 
-  var category = req.body.category;
-
   Post.findAll({
-      where: {
-        categoryId: category,
-      },
       include: [{
-        model: Category,
-      }, ],
-      order: [
-        ["id", "DESC"]
-      ],
-      limit: 20,
+          model: Category,
+        }, ],
+        order: [
+          ["id", "DESC"]
+        ],
+        limit: 20,
+        where: {
+          data: {
+            [Op.between]: [new Date("Jul 01 2022"), new Date("Jul 30 2022")],
+          },
+        },
     })
     .then((payments) => {
       Category.findAll().then((categories) => {
