@@ -110,6 +110,8 @@
 </body>
 <%- include ("../../partials/footer.ejs") %>
 
+
+
 <script>
   //Filter Category
 
@@ -243,6 +245,20 @@
     cb(start, end);
   });
 </script>
+
+<script>
+
+.filter('isAfter', function() {
+  return function(items, dateAfter) {
+    // Using ES6 filter method
+    return items.filter(function(item){
+      return moment(item.date).isAfter(dateAfter);
+    })
+  }
+})
+
+</script>
+
 <!-- script dashboard   -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
