@@ -14,7 +14,7 @@
     <hr />
 
     <div class="row row-cols-1 row-cols-md-2 g-4">
-      <div class="col-2">
+      <div class="col-3">
         <div class="card">
           <a class="btn btn-success form-control" href="/admin/payments/new"
             >Novo Pagamento</a
@@ -33,8 +33,35 @@
 
       <div class="col-4">
         <div class="card text-center">
-          <div id="reportrange" class="form-control">
-            <span></span>
+          <div id="filterData">
+  <button type="button" class="btn dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
+    Filter
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <li><hr class="dropdown-divider"></li>
+
+    <li> 
+      <select class="dropdown-item" onchange="location = this.value;">
+        <option value="#" >Mês</option>
+         <option value="/admin/filter/janeiro">Janeiro</option>
+           <option value="/admin/filter/fevereiro">Fevereiro</option>
+            <option value="/admin/filter/marco">Março</option>
+           <option value="/admin/filter/abril">Abril</option>
+            <option value="/admin/filter/maio">Maio</option>
+           <option value="/admin/filter/junho">Junho</option>
+            <option value="/admin/filter/julho">Julho</option>
+           <option value="/admin/filter/agosto">Agosto</option>
+            <option value="/admin/filter/setembro">Setembro</option>
+           <option value="/admin/filter/outubro">Outubro</option>
+            <option value="/admin/filter/novembro">Novembro</option>
+           <option value="/admin/filter/dezembro">Dezembro</option>
+      </select>
+
+</li>
+  </ul>
           </div>
         </div>
       </div>
@@ -60,7 +87,7 @@
 
     <table id="tab" data-type="table-menu" class="table table-bordered">
       <thead>
-        <tr>
+        <tr id="table-header">
           <th>Fornecedor</th>
           <th>Valor</th>
           <th>Categoria</th>
@@ -74,7 +101,7 @@
           <td><%= payment.fornecedor %></td>
           <td>R$ <%= payment.valor %></td>
           <td><%= payment.category.title %></td>
-          <td id="datePayments"><%= payment.data %></td>
+          <td><%= payment.data %></td>
           <td>
             <a
               href="/admin/payments/edit/<%= payment.id %>"
@@ -87,7 +114,7 @@
               style="display: inline;"
               onsubmit="confirmarDelecao(event, this)"
             >
-              <input type="hidden" name="id" value="<%= payment.id %>" />
+              <input type="hidden" name="id" value="<%= payment.id %>"/>
               <button class="btn btn-danger">Deletar</button>
             </form>
           </td>
@@ -102,14 +129,13 @@
       </div>
       <hr />
     </div>
-
+    <hr />
     <div class="dashboard">
       <canvas id="myChart"></canvas>
     </div>
   </div>
 </body>
 <%- include ("../../partials/footer.ejs") %>
-
 
 
 <script>
@@ -157,69 +183,69 @@
 </script>
 
 <script>
-  //delete Script
-  function confirmarDelecao(event, form) {
-    event.preventDefault();
-    var decision = confirm("Você quer deletar este Pagamento?");
-    if (decision) {
-      form.submit();
+    //delete Script
+    function confirmarDelecao(event, form) {
+      event.preventDefault();
+      var decision = confirm("Você quer deletar este Pagamento?");
+      if (decision) {
+        form.submit();
+      }
     }
-  }
 
-  ////////////////////////////
-  // search script
+    ////////////////////////////
+    // search script
 
-  const inputSearch = document.querySelector("#search");
-  const tableMenu = document.querySelector("[data-type='table-menu']");
+    const inputSearch = document.querySelector("#search");
+    const tableMenu = document.querySelector("[data-type='table-menu']");
 
-  const trs = Array.from(tableMenu.querySelectorAll("tbody tr"));
-  const trsPesquisar = Array.from(tableMenu.querySelectorAll("tr.pesquisar"));
+    const trs = Array.from(tableMenu.querySelectorAll("tbody tr"));
+    const trsPesquisar = Array.from(tableMenu.querySelectorAll("tr.pesquisar"));
 
-  inputSearch.addEventListener("input", function() {
-    const str = this.value;
-    if (str) {
-      filterData(str);
-    } else {
-      showAllItems();
-    }
-  });
-
-  function showAllItems() {
-    trs.forEach((tr) => tr.classList.remove("hide"));
-  }
-
-  function filterData(str) {
-    showAllItems();
-    trsPesquisar.forEach((trPesquisar) => {
-      let found = false;
-
-      for (let i = 0; i < trs.length; i++) {
-        let tr = trs[i];
-        if (tr.textContent.toLowerCase().includes(str.toLowerCase())) {
-          found = true;
-          tr.classList.remove("hide");
-        } else {
-          tr.classList.add("hide");
-        }
+    inputSearch.addEventListener("input", function() {
+      const str = this.value;
+      if (str) {
+        filterData(str);
+      } else {
+        showAllItems();
       }
     });
-  }
-  /////////////////////////////////////////////////
+
+    function showAllItems() {
+      trs.forEach((tr) => tr.classList.remove("hide"));
+    }
+
+    function filterData(str) {
+      showAllItems();
+      trsPesquisar.forEach((trPesquisar) => {
+        let found = false;
+
+        for (let i = 0; i < trs.length; i++) {
+          let tr = trs[i];
+          if (tr.textContent.toLowerCase().includes(str.toLowerCase())) {             
+            found = true;         
+            tr.classList.remove("hide");
+          } else {  
+            tr.classList.add("hide"); 
+          }
+        }               
+          });   
+        }
+    /////////////////////////////////////////////////
+
+
 </script>
 
 <script type="text/javascript">
   $(function() {
-    moment.locale("pt-br");
     var start = moment().subtract(29, "days");
     var end = moment();
 
     function cb(start, end) {
-      $("#reportrange span").html(
+      $("#daterange span").html(
         start.format("DD/MMMM/YYYY") + "  até  " + end.format("DD/MMMM/YYYY")
       );
     }
-
-    $("#reportrange").daterangepicker(
+    $("#daterange").daterangepicker(
       {
         startDate: start,
         endDate: end,
@@ -240,23 +266,10 @@
         },
       },
       cb
-    );
+    ); //date rangepicker ends here
 
     cb(start, end);
   });
-</script>
-
-<script>
-
-.filter('isAfter', function() {
-  return function(items, dateAfter) {
-    // Using ES6 filter method
-    return items.filter(function(item){
-      return moment(item.date).isAfter(dateAfter);
-    })
-  }
-})
-
 </script>
 
 <!-- script dashboard   -->
@@ -344,23 +357,7 @@
   const myChart = new Chart(document.getElementById("myChart"), config);
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- script  Seletor de período   -->
+<!-- script  Seletor de período moment.js   -->
 
 <script type="text/javascript">
   //! moment.js
