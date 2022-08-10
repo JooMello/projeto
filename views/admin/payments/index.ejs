@@ -40,7 +40,15 @@
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="#">Action</a></li>
     <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <li> 
+      <select class="dropdown-item" onchange="location = this.value;">
+        <option value="#" >Ano</option>
+         <option value="/admin/filter/2021">2021</option>
+           <option value="/admin/filter/2022">2022</option>
+           <option value="/admin/filter/2023">2023</option>
+      </select>
+
+</li>
     <li><hr class="dropdown-divider"></li>
 
     <li> 
@@ -101,7 +109,7 @@
           <td><%= payment.fornecedor %></td>
           <td>R$ <%= payment.valor %></td>
           <td><%= payment.category.title %></td>
-          <td><%= payment.data %></td>
+          <td ><%= payment.data %></td>
           <td>
             <a
               href="/admin/payments/edit/<%= payment.id %>"
@@ -139,8 +147,7 @@
 
 
 <script>
-  //Filter Category
-
+  //Filter Category     
   function AdicionarFiltro(tabela, coluna) {
     var valores = new Array();
 
@@ -194,7 +201,6 @@
 
     ////////////////////////////
     // search script
-
     const inputSearch = document.querySelector("#search");
     const tableMenu = document.querySelector("[data-type='table-menu']");
 
@@ -231,7 +237,6 @@
           });   
         }
     /////////////////////////////////////////////////
-
 
 </script>
 
