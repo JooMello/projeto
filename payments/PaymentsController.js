@@ -9,11 +9,7 @@ const sequelize = require("sequelize");
 const {
   Op
 } = require("sequelize");
-const moment = require("moment");
-const fns = require("date-fns");
-const {
-  DateTime
-} = require("luxon"); 
+const { DateTime } = require("luxon"); 
 
 
 //lista todos os pagamento
@@ -170,9 +166,6 @@ router.get("/admin/payments", adminAuth, async (req, res, next) => {
     raw: true
   });
   var totalPayments14 = amount14['sum(`valor`)']
-
-
-
 
   Payment.findAll({
     include: [{

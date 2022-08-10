@@ -7,10 +7,7 @@ const connection = require("./database/database");
 const slugify = require("slugify");
 const adminAuth = require("./middlewares/adminAuth");
 const moment = require("moment");
-const {
-  DateTime
-} = require("luxon");
-
+const { DateTime } = require("luxon");
 
 const categoriesController = require("./categories/CategoriesController");
 const usersController = require("./users/UsersController");
@@ -24,8 +21,7 @@ const Receipt = require("./receipts/Receipt");
 
 // View engine
 app.set("view engine", "ejs");
-// Sessions
-
+// Sessions 
 app.use(
   session({
     secret: "qualquercoisa",
@@ -34,8 +30,6 @@ app.use(
     },
   })
 );
-
-
 
 // Static
 app.use(express.static("public"));

@@ -5,23 +5,106 @@
 <div class="container">
   <hr />
   <h2>Recebimentos</h2>
-  <a class="btn btn-success" href="/admin/receipts/new">Novo Recebimento</a>
-  <hr />
-  <table class="table table-bordered">
+
+
+    <hr />
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col-3">
+        <div class="card">
+          <a class="btn btn-success form-control" href="/admin/receipts/new"
+            >Novo Pagamento</a
+          >
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="card">
+          <select
+            id="filtroColuna_3"
+            class="filtroColuna form-control "
+          ></select>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="card text-center">
+          <div id="filterData">
+  <button type="button" class="btn dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
+    Filter
+  </button>
+  <ul class="dropdown-menu">
+    <li> 
+      <select class="dropdown-item" onchange="location = this.value;">
+        <option value="#" >Ano</option>
+         <option value="/admin/filter/2021">2021</option>
+           <option value="/admin/filter/2022">2022</option>
+           <option value="/admin/filter/2023">2023</option>
+      </select>
+
+</li>
+    <li><hr class="dropdown-divider"></li>
+
+    <li> 
+      <select class="dropdown-item" onchange="location = this.value;">
+        <option value="#" >Mês</option>
+         <option value="/admin/filter/janeiro">Janeiro</option>
+           <option value="/admin/filter/fevereiro">Fevereiro</option>
+            <option value="/admin/filter/marco">Março</option>
+           <option value="/admin/filter/abril">Abril</option>
+            <option value="/admin/filter/maio">Maio</option>
+           <option value="/admin/filter/junho">Junho</option>
+            <option value="/admin/filter/julho">Julho</option>
+           <option value="/admin/filter/agosto">Agosto</option>
+            <option value="/admin/filter/setembro">Setembro</option>
+           <option value="/admin/filter/outubro">Outubro</option>
+            <option value="/admin/filter/novembro">Novembro</option>
+           <option value="/admin/filter/dezembro">Dezembro</option>
+      </select>
+
+</li>
+  </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="card">
+          <!--Barra de Pesquisa-->
+          <form class="form-search">
+            <input
+              class="form-control"
+              type="text"
+              name="search"
+              id="search"
+              placeholder="Pesquisar..."
+            />
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+
+   <table id="tab" data-type="table-menu" class="table table-bordered">
     <thead>
-      <tr>
+            <tr id="table-header">
         <th>Fornecedor</th>
         <th>Valor</th>
         <th>Categoria</th>
+          <th>Data</th>
         <th>Ações</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="demo">
       <% receipts.forEach(receipt => { %>
-      <tr href="/<%= receipt.slug %>">
+      <tr class="pesquisar" href="/<%= receipt.slug %>">
         <td><%= receipt.fornecedor %></td>
         <td><%= receipt.valor %></td>
         <td><%= receipt.category.title %></td>
+        <td id="formatData" ><%= receipt.data %></td>
         <td>
            <a
             href="/admin/receipts/edit/<%= receipt.id %>"
@@ -50,18 +133,230 @@
       <hr />
     </div>
 
+        <hr />
+    <div class="dashboard">
+      <canvas id="myChart"></canvas>
+    </div>
+
 </div>
 
 <body>
 
 <%- include ("../../partials/footer.ejs") %>
 
+
+
 <script>
-  function confirmarDelecao(event, form) {
-    event.preventDefault();
-    var decision = confirm("Você quer deletar este Recebimento?");
-    if (decision) {
-      form.submit();
+  //Filter Category     
+  function AdicionarFiltro(tabela, coluna) {
+    var valores = new Array();
+
+    //varrer todas as linhas da tabela recuperando os valores da coluna a ser filtrada. Esses valores são inseridos uma única vez em um vetor valores. Usamos a função indexOf do array para verificar se o valor já foi inserido e, em caso negativo, usamos a função push para inseri-lo na lista.
+    $("#" + tabela + " tbody tr").each(function() {
+      var txt = $(this)
+        .children("td:nth-child(" + coluna + ")")
+        .text();
+      if (valores.indexOf(txt) < 0) {
+        valores.push(txt);
+      }
+    });
+
+    //usando a instrução for, percorremos o array valores e, para cada item, adicionamos uma tag option no select previamente declarado.
+    $("#filtroColuna_" + coluna.toString()).append("<option>TODOS</option>");
+    for (elemento in valores) {
+      $("#filtroColuna_" + coluna.toString()).append(
+        "<option>" + valores[elemento] + "</option>"
+      );
     }
+    //um tratamento ao evento change do select cujo nome foi definido como filtroColuna_N, onde N é o índice da coluna. Primeiro obtemos o valor selecionado através da função val() da jQuery. Em seguida todas as linhas são tornadas visíveis com o método show().
+    $("#filtroColuna_" + coluna.toString()).change(function() {
+      var filtro = $(this).val();
+      $("#" + tabela + " tbody tr").show();
+      //Caso o item selecionado não seja “TODOS”, percorremos todas as linhas da tabela verificando o valor da coluna filtrada. Caso este não seja igual ao valor selecionado, a linha é ocultada com o método hide().
+      if (filtro != "TODOS") {
+        $("#" + tabela + " tbody tr").each(function() {
+          var txt = $(this)
+            .children("td:nth-child(" + coluna + ")")
+            .text();
+          if (txt != filtro) {
+            $(this).hide();
+          }
+        });
+      }
+    });
   }
+  //Tendo definido a função AdicionarFiltro, podemos testá-la passando como parâmetro o nome da tabela, “tab”, e o índice da terceira coluna que, nesse caso inicia a contagem no 1.
+  AdicionarFiltro("tab", 3);
+</script>
+
+<script>
+    //delete Script
+    function confirmarDelecao(event, form) {
+      event.preventDefault();
+      var decision = confirm("Você quer deletar este Pagamento?");
+      if (decision) {
+        form.submit();
+      }
+    }
+
+    ////////////////////////////
+    // search script
+    const inputSearch = document.querySelector("#search");
+    const tableMenu = document.querySelector("[data-type='table-menu']");
+
+    const trs = Array.from(tableMenu.querySelectorAll("tbody tr"));
+    const trsPesquisar = Array.from(tableMenu.querySelectorAll("tr.pesquisar"));
+
+    inputSearch.addEventListener("input", function() {
+      const str = this.value;
+      if (str) {
+        filterData(str);
+      } else {
+        showAllItems();
+      }
+    });
+
+    function showAllItems() {
+      trs.forEach((tr) => tr.classList.remove("hide"));
+    }
+
+    function filterData(str) {
+      showAllItems();
+      trsPesquisar.forEach((trPesquisar) => {
+        let found = false;
+
+        for (let i = 0; i < trs.length; i++) {
+          let tr = trs[i];
+          if (tr.textContent.toLowerCase().includes(str.toLowerCase())) {             
+            found = true;         
+            tr.classList.remove("hide");
+          } else {  
+            tr.classList.add("hide"); 
+          }
+        }               
+          });   
+        }
+    /////////////////////////////////////////////////
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    var start = moment().subtract(29, "days");
+    var end = moment();
+
+    function cb(start, end) {
+      $("#daterange span").html(
+        start.format("DD/MMMM/YYYY") + "  até  " + end.format("DD/MMMM/YYYY")
+      );
+    }
+    $("#daterange").daterangepicker(
+      {
+        startDate: start,
+        endDate: end,
+        ranges: {
+          Hoje: [moment(), moment()],
+          Ontem: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+          "Últimos 7 dias": [moment().subtract(6, "days"), moment()],
+          "Últimos 30 dias": [moment().subtract(29, "days"), moment()],
+          "Este mês": [moment().startOf("month"), moment().endOf("month")],
+          "Mês passado": [
+            moment()
+              .subtract(1, "month")
+              .startOf("month"),
+            moment()
+              .subtract(1, "month")
+              .endOf("month"),
+          ],
+        },
+      },
+      cb
+    ); //date rangepicker ends here
+
+    cb(start, end);
+  });
+</script>
+
+<!-- script dashboard   -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = [  <% categories.forEach((category) => { %>
+          "<%= category.title %>" ,
+        <% }) %>
+    ];
+
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: "receipts",
+          backgroundColor: [
+            "rgba(176,224,230)",
+            "rgba(173,216,230)",
+            "rgba(135,206,250)",
+            "rgba(135,206,235)",
+            "rgba(0,191,255)",
+            "rgba(176,196,222)",
+            "rgba(30,144,255)",
+            "rgba(100,149,237)",
+            "rgba(70,130,180)",
+            "rgba(0,0,255)",
+            "rgba(0,0,139)",
+            "rgba(0,0,205)",
+            "rgba(123,104,238)",
+            "rgba(12,104,238)",
+          ],
+          borderColor: [
+            "rgba(0,0,255, 0.1)",
+            "rgba(54, 162, 235, 0.1)",
+            "rgba(255, 206, 86, 0.1)",
+            "rgba(75, 192, 192, 0.1)",
+            "rgba(153, 102, 255, 0.1)",
+            "rgba(255, 159, 64, 0.1)",
+            "rgba(255, 9, 12, 0.1)",
+            "rgba(54, 12, 23, 0.1)",
+            "rgba(25, 06, 186, 0.1)",
+            "rgba(75, 92, 192, 0.1)",
+            "rgba(53, 12, 255, 0.1)",
+            "rgba(55, 15, 84, 0.1)",
+            "rgba(15, 02, 255, 0.1)",
+            "rgba(25, 19, 64, 0.1)",
+          ],
+          borderWidth: 1,
+          data: [
+  <%= totalReceipts1 %>,
+   <%= totalReceipts2 %>,
+   <%= totalReceipts3 %>,
+   <%= totalReceipts4 %>,
+   <%= totalReceipts5 %>,
+   <%= totalReceipts6 %>,
+   <%= totalReceipts7 %>,
+   <%= totalReceipts8 %>,
+   <%= totalReceipts9 %>,
+   <%= totalReceipts10 %>,
+   <%= totalReceipts11 %>,
+   <%= totalReceipts12 %>,
+    <%= totalReceipts13 %>,
+   <%= totalReceipts14 %>
+        ],
+        },
+      ],
+    };
+
+    const config = {
+      type: "pie",
+      data: data,
+      options: {
+        plugins: {
+              title: {
+                  display: true,
+                  text: 'Categorias'
+              }
+          }
+      },
+    };
+</script>
+
+<script>
+  const myChart = new Chart(document.getElementById("myChart"), config);
 </script>
